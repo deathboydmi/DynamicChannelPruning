@@ -16,24 +16,12 @@ class VGG16_DP(nn.Module):
 
         self.features = pretrain_model.features
 
-        temp = self.features[40]
-        self.features[40] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
-        self.features[40].conv = temp
-        temp = self.features[37]
-        self.features[37] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
-        self.features[37].conv = temp
-        temp = self.features[34]
-        self.features[34] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
-        self.features[34].conv = temp
-        temp = self.features[30]
-        self.features[30] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
-        self.features[30].conv = temp
-        temp = self.features[27]
-        self.features[27] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
-        self.features[27].conv = temp
-        temp = self.features[24]
-        self.features[24] = DP_Conv2d(256, 512, kernel_size=3, padding=1)
-        self.features[24].conv = temp
+        self.features[40] = DP_Conv2d(conv2d=self.features[40])
+        self.features[37] = DP_Conv2d(conv2d=self.features[37])
+        self.features[34] = DP_Conv2d(conv2d=self.features[34])
+        self.features[30] = DP_Conv2d(conv2d=self.features[34])
+        self.features[27] = DP_Conv2d(conv2d=self.features[27])
+        self.features[24] = DP_Conv2d(conv2d=self.features[24])
 
         self.classifier = pretrain_model.classifier
 

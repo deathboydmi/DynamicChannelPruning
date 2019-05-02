@@ -77,7 +77,7 @@ class DP_BN_Conv2d(nn.Module):
                                   padding_mode=padding_mode)
 
     def __init__from_Conv2d(self, conv2d, hidden_layer_channels):
-        if type(conv2d) != nn.Conv2d:
+        if not isinstance(conv2d, nn.Conv2d):
             assert()
         if hidden_layer_channels is None:
             hidden_layer_channels = conv2d.out_channels // 16
@@ -149,7 +149,7 @@ class DP_Conv2d(nn.Module):
                                   padding_mode=padding_mode)
 
     def __init__from_Conv2d(self, conv2d, hidden_layer_channels):
-        if type(conv2d) != nn.Conv2d:
+        if not isinstance(conv2d, nn.Conv2d):
             assert()
         if hidden_layer_channels is None:
             hidden_layer_channels = conv2d.out_channels // 16
