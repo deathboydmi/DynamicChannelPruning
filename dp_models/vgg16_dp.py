@@ -4,23 +4,7 @@ import torch.nn as nn
 import torch.nn.init as init
 import torchvision.models as models
 
-from dynamic_pruning import DynamicPruning
-
-
-class Conv2d_dp(nn.Module):
-    def __init__(self, in_ch, out_ch, feature_map_size):
-        super(Conv2d_dp, self).__init__()
-
-        self.prun = DynamicPruning(in_ch, feature_map_size)
-        self.conv = nn.Conv2d(
-            in_ch, out_ch, kernel_size=3, stride=1, padding=1)
-
-    def forward(self, x):
-        dp_res = self.prun(x)
-        x = x * dp_res
-        x = self.conv(x)
-
-        return x
+from dynamic_pruning import DP_Conv2d
 
 
 class VGG16_DP(nn.Module):
@@ -33,22 +17,22 @@ class VGG16_DP(nn.Module):
         self.features = pretrain_model.features
 
         temp = self.features[40]
-        self.features[40] = Conv2d_dp(512, 512, 14)
+        self.features[40] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
         self.features[40].conv = temp
         temp = self.features[37]
-        self.features[37] = Conv2d_dp(512, 512, 14)
+        self.features[37] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
         self.features[37].conv = temp
         temp = self.features[34]
-        self.features[34] = Conv2d_dp(512, 512, 14)
+        self.features[34] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
         self.features[34].conv = temp
         temp = self.features[30]
-        self.features[30] = Conv2d_dp(512, 512, 28)
+        self.features[30] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
         self.features[30].conv = temp
         temp = self.features[27]
-        self.features[27] = Conv2d_dp(512, 512, 28)
+        self.features[27] = DP_Conv2d(512, 512, kernel_size=3, padding=1)
         self.features[27].conv = temp
         temp = self.features[24]
-        self.features[24] = Conv2d_dp(256, 512, 28)
+        self.features[24] = DP_Conv2d(256, 512, kernel_size=3, padding=1)
         self.features[24].conv = temp
 
         self.classifier = pretrain_model.classifier
