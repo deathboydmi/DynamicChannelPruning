@@ -52,24 +52,41 @@ class DynamicPruningBinarization(nn.Module):
 
 
 class DP_BN_Conv2d(nn.Module):
-    def __init__(self, in_channels, out_channels,
-                 kernel_size, stride=1, padding=0, dilation=1,
+    def __init__(self, in_channels=0, out_channels=0,
+                 kernel_size=0, stride=1, padding=0, dilation=1,
                  groups=1, bias=True, padding_mode='zeros',
-                 hidden_layer_channels=None):
+                 conv2d=None, hidden_layer_channels=None):
         super(DP_BN_Conv2d, self).__init__()
+        if in_channels is 0 or out_channels is 0 or kernel_size is 0:
+            if conv2d is None:
+                assert()
+            else:
+                self.__init__from_Conv2d(conv2d, hidden_layer_channels)
+        else:
+            if hidden_layer_channels is None:
+                hidden_layer_channels = out_channels // 16
+                if hidden_layer_channels < 4:
+                    hidden_layer_channels = 4
 
+            self.prun = DynamicPruningBinarization(
+                in_channels, hidden_layer_channels)
+            self.conv = nn.Conv2d(in_channels, out_channels,
+                                  kernel_size, stride=stride,
+                                  padding=padding, dilation=dilation,
+                                  groups=groups, bias=bias,
+                                  padding_mode=padding_mode)
+
+    def __init__from_Conv2d(self, conv2d, hidden_layer_channels):
+        if type(conv2d) != nn.Conv2d:
+            assert()
         if hidden_layer_channels is None:
-            hidden_layer_channels = out_channels // 16
+            hidden_layer_channels = conv2d.out_channels // 16
             if hidden_layer_channels < 4:
                 hidden_layer_channels = 4
 
         self.prun = DynamicPruningBinarization(
-            in_channels, hidden_layer_channels)
-        self.conv = nn.Conv2d(in_channels, out_channels,
-                              kernel_size, stride=stride,
-                              padding=padding, dilation=dilation,
-                              groups=groups, bias=bias,
-                              padding_mode=padding_mode)
+            conv2d.in_channels, hidden_layer_channels)
+        self.conv = conv2d
 
     def forward(self, x):
         dp_res = self.prun(x)
@@ -108,23 +125,40 @@ class DynamicPruning(nn.Module):
 
 
 class DP_Conv2d(nn.Module):
-    def __init__(self, in_channels, out_channels,
-                 kernel_size, stride=1, padding=0, dilation=1,
+    def __init__(self, in_channels=0, out_channels=0,
+                 kernel_size=0, stride=1, padding=0, dilation=1,
                  groups=1, bias=True, padding_mode='zeros',
-                 hidden_layer_channels=None):
+                 conv2d=None, hidden_layer_channels=None):
         super(DP_Conv2d, self).__init__()
+        if in_channels is 0 or out_channels is 0 or kernel_size is 0:
+            if conv2d is None:
+                assert()
+            else:
+                self.__init__from_Conv2d(conv2d, hidden_layer_channels)
+        else:
+            if hidden_layer_channels is None:
+                hidden_layer_channels = out_channels // 16
+                if hidden_layer_channels < 4:
+                    hidden_layer_channels = 4
 
+            self.prun = DynamicPruning(in_channels, hidden_layer_channels)
+            self.conv = nn.Conv2d(in_channels, out_channels,
+                                  kernel_size, stride=stride,
+                                  padding=padding, dilation=dilation,
+                                  groups=groups, bias=bias,
+                                  padding_mode=padding_mode)
+
+    def __init__from_Conv2d(self, conv2d, hidden_layer_channels):
+        if type(conv2d) != nn.Conv2d:
+            assert()
         if hidden_layer_channels is None:
-            hidden_layer_channels = out_channels // 16
+            hidden_layer_channels = conv2d.out_channels // 16
             if hidden_layer_channels < 4:
                 hidden_layer_channels = 4
 
-        self.prun = DynamicPruning(in_channels, hidden_layer_channels)
-        self.conv = nn.Conv2d(in_channels, out_channels,
-                              kernel_size, stride=stride,
-                              padding=padding, dilation=dilation,
-                              groups=groups, bias=bias,
-                              padding_mode=padding_mode)
+        self.prun = DynamicPruning(
+            conv2d.in_channels, hidden_layer_channels)
+        self.conv = conv2d
 
     def forward(self, x):
         dp_res = self.prun(x)
@@ -132,3 +166,10 @@ class DP_Conv2d(nn.Module):
         x = self.conv(x)
 
         return x
+
+
+if __name__ == "__main__":
+    x = torch.rand(1, 256, 112, 112)
+    conv = nn.Conv2d(256, 512, 3, stride=1, padding=1)
+    prunConv = DP_BN_Conv2d(conv2d=conv)
+    print(prunConv(x))
