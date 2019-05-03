@@ -1,5 +1,6 @@
 # Dynamic Channel Pruning with PyTorch
 ### Based on the paper: [Dynamic Channel Pruning: Feature Boosting & Suppression](https://arxiv.org/pdf/1810.05331.pdf)
+![dynamic pruning architecture](https://raw.githubusercontent.com/deathboydmi/DynamicChannelPruning/master/DP_architecture.png)
 
 ### Requirements:
 * Ubuntu 18.0.4
