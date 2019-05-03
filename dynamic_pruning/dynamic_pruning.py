@@ -97,8 +97,13 @@ class DP_BN_Conv2d(nn.Module):
 
 
 class DynamicPruning(nn.Module):
-    def __init__(self, in_channels, hidden_layer_channels):
+    def __init__(self, in_channels, hidden_layer_channels=None):
         super(DynamicPruning, self).__init__()
+
+        if hidden_layer_channels is None:
+            hidden_layer_channels = in_channels // 16
+            if hidden_layer_channels < 4:
+                hidden_layer_channels = 4
 
         self.gavgpool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Conv2d(in_channels, hidden_layer_channels,
@@ -148,7 +153,7 @@ class DP_Conv2d(nn.Module):
                                   groups=groups, bias=bias,
                                   padding_mode=padding_mode)
 
-    def __init__from_Conv2d(self, conv2d, hidden_layer_channels):
+    def __init__from_Conv2d(self, conv2d, hidden_layer_channels=None):
         if not isinstance(conv2d, nn.Conv2d):
             assert()
         if hidden_layer_channels is None:

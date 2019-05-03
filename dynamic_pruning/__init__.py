@@ -1,2 +1,3 @@
+from dynamic_pruning.dynamic_pruning import DynamicPruning
 from dynamic_pruning.dynamic_pruning import DP_Conv2d
 from dynamic_pruning.dynamic_pruning import DP_BN_Conv2d
