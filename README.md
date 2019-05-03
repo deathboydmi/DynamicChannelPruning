@@ -1,6 +1,13 @@
 # Dynamic Channel Pruning with PyTorch
 ### Based on the paper: [Dynamic Channel Pruning: Feature Boosting & Suppression](https://arxiv.org/pdf/1810.05331.pdf)
 
+### Requirements:
+* Ubuntu 18.0.4
+* Python >= v3.6
+* Jupyter-notebook (optional)
+
+Run setup_env.sh for good mood :)
+
 ### Example:
 
 
