@@ -19,7 +19,7 @@ class VGG16_DP(nn.Module):
         self.features[40] = DP_Conv2d(conv2d=self.features[40])
         self.features[37] = DP_Conv2d(conv2d=self.features[37])
         self.features[34] = DP_Conv2d(conv2d=self.features[34])
-        self.features[30] = DP_Conv2d(conv2d=self.features[34])
+        self.features[30] = DP_Conv2d(conv2d=self.features[30])
         self.features[27] = DP_Conv2d(conv2d=self.features[27])
         self.features[24] = DP_Conv2d(conv2d=self.features[24])
 
